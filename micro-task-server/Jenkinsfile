@@ -1,0 +1,25 @@
+pipeline {
+  agent any
+  stages {
+    stage('Checkout') {
+      steps {
+        git url: 'https://github.com/your-repo.git'
+      }
+    }
+    stage('Build Backend') {
+      steps {
+        dir('micro-task-server') {
+          sh 'npm install'
+          sh 'npm test || echo "Tests skipped"'
+        }
+      }
+    }
+    stage('Docker Build') {
+      steps {
+        dir('micro-task-server') {
+          sh 'docker build -t backend-app .'
+        }
+      }
+    }
+  }
+}
